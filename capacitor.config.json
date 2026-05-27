@@ -1,5 +1,9 @@
 {
   "appId": "com.frog.englishwords",
   "appName": "英语单词欢乐练",
-  "webDir": "dist"
+  "webDir": "dist",
+  "server": {
+    "cleartext": true,
+    "allowNavigation": ["*"]
+  }
 }

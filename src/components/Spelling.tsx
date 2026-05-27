@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback, useRef, useEffect } from 'react'
+import { useState, useMemo, useCallback, useRef, useEffect, type KeyboardEvent } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useData } from '../services/dataLoader'
@@ -12,10 +12,11 @@ import ConfirmLeave from './ConfirmLeave'
 const SPELLING_COUNT = 10
 
 export default function Spelling() {
-  const { grade } = useParams()
+  const { grade } = useParams<{ grade: string }>()
   const navigate = useNavigate()
   const [showLeaveConfirm, setShowLeaveConfirm] = useState(false)
-  const { list, loading } = useData(grade, 'words')
+  const gradeNum = Number(grade)
+  const { list, loading } = useData(gradeNum, 'words')
 
   const questionList = useMemo(() => {
     return pickItems(list, SPELLING_COUNT, `spelling_${grade}_word`)
@@ -23,12 +24,12 @@ export default function Spelling() {
 
   const [qIndex, setQIndex] = useState(0)
   const [input, setInput] = useState('')
-  const [result, setResult] = useState(null)
+  const [result, setResult] = useState<'correct' | 'wrong' | null>(null)
   const [score, setScore] = useState(0)
   const [finished, setFinished] = useState(false)
   const [showAnswer, setShowAnswer] = useState(false)
   const [showStar, setShowStar] = useState(false)
-  const inputRef = useRef(null)
+  const inputRef = useRef<HTMLInputElement>(null)
 
   const current = questionList[qIndex] || { en: '', zh: '' }
   const progress = (qIndex / questionList.length) * 100
@@ -55,14 +56,6 @@ export default function Spelling() {
     setShowAnswer(true)
   }, [input, current])
 
-  const handleKeyDown = useCallback((e) => {
-    if (e.key === 'Enter' && !result) {
-      check()
-    } else if (e.key === 'Enter' && result) {
-      next()
-    }
-  }, [result, check])
-
   const next = useCallback(() => {
     if (qIndex < questionList.length - 1) {
       setQIndex((i) => i + 1)
@@ -74,6 +67,14 @@ export default function Spelling() {
       playComplete()
     }
   }, [qIndex, questionList.length])
+
+  const handleKeyDown = useCallback((e: KeyboardEvent) => {
+    if (e.key === 'Enter' && !result) {
+      check()
+    } else if (e.key === 'Enter' && result) {
+      next()
+    }
+  }, [result, check, next])
 
   const skip = useCallback(() => {
     setResult('wrong')
@@ -104,16 +105,12 @@ export default function Spelling() {
       <span className="page-deco" style={{ bottom: '10%', left: '8%', fontSize: 22, animationDelay: '3s' }}>🔤</span>
       <div className="game-container">
         <div className="game-header">
-          <button className="back-btn" onClick={() => setShowLeaveConfirm(true)}>
-            ← 返回
-          </button>
+          <button className="back-btn" onClick={() => setShowLeaveConfirm(true)}>← 返回</button>
           <span className="progress-text">{qIndex + 1} / {questionList.length}</span>
         </div>
-
         <div className="progress-bar-wrap">
           <div className="progress-bar-fill" style={{ width: `${progress}%` }} />
         </div>
-
         <AnimatePresence mode="wait">
           <motion.div
             className="game-card"
@@ -132,7 +129,6 @@ export default function Spelling() {
             >
               {current.zh}
             </motion.span>
-
             <div className="spelling-input-row" style={{ position: 'relative' }}>
               <input
                 ref={inputRef}
@@ -147,12 +143,7 @@ export default function Spelling() {
                 autoCapitalize="off"
               />
               {!result ? (
-                <motion.button
-                  onClick={check}
-                  whileTap={{ scale: 0.9 }}
-                >
-                  ✓ 确认
-                </motion.button>
+                <motion.button onClick={check} whileTap={{ scale: 0.9 }}>✓ 确认</motion.button>
               ) : (
                 <motion.button
                   onClick={next}
@@ -164,16 +155,10 @@ export default function Spelling() {
                   {qIndex < questionList.length - 1 ? '下一题 →' : '查看结果'}
                 </motion.button>
               )}
-
               <AnimatePresence>
                 {showStar && (
                   <motion.span
-                    style={{
-                      position: 'absolute',
-                      right: -8,
-                      top: -28,
-                      fontSize: 32,
-                    }}
+                    style={{ position: 'absolute', right: -8, top: -28, fontSize: 32 }}
                     initial={{ scale: 0, opacity: 1, rotate: 0 }}
                     animate={{ scale: 1.5, opacity: 0, y: -40, rotate: 180 }}
                     exit={{ opacity: 0 }}
@@ -184,7 +169,6 @@ export default function Spelling() {
                 )}
               </AnimatePresence>
             </div>
-
             {showAnswer && result === 'wrong' && (
               <motion.p
                 className="spelling-answer"
@@ -195,17 +179,9 @@ export default function Spelling() {
                 <SpeakerButton text={current.en} size={24} style={{ marginLeft: 6, display: 'inline-flex' }} />
               </motion.p>
             )}
-
             {!result && (
-              <motion.button
-                onClick={skip}
-                className="skip-btn"
-                whileTap={{ scale: 0.9 }}
-              >
-                跳过 →
-              </motion.button>
+              <motion.button onClick={skip} className="skip-btn" whileTap={{ scale: 0.9 }}>跳过 →</motion.button>
             )}
-
             {result === 'correct' && (
               <motion.p
                 initial={{ scale: 0 }}
@@ -219,15 +195,9 @@ export default function Spelling() {
           </motion.div>
         </AnimatePresence>
       </div>
-
       <AnimatePresence>
         {finished && resultData && (
-          <motion.div
-            className="results-overlay"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
+          <motion.div className="results-overlay" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             {score >= 7 && <Confetti count={40} duration={3000} />}
             <motion.div
               className="results-card"
@@ -248,23 +218,14 @@ export default function Spelling() {
               <div className="score">{score} / {questionList.length}</div>
               <p className="result-message">{resultData.msg}</p>
               <div className="results-actions">
-                <button className="btn-retry" onClick={() => window.location.reload()}>
-                  🔄 再来一次
-                </button>
-                <button className="btn-home" onClick={() => navigate('/')}>
-                  🏠 返回
-                </button>
+                <button className="btn-retry" onClick={() => window.location.reload()}>🔄 再来一次</button>
+                <button className="btn-home" onClick={() => navigate('/')}>🏠 返回</button>
               </div>
             </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
-
-      <ConfirmLeave
-        show={showLeaveConfirm}
-        onConfirm={() => navigate('/')}
-        onCancel={() => setShowLeaveConfirm(false)}
-      />
+      <ConfirmLeave show={showLeaveConfirm} onConfirm={() => navigate('/')} onCancel={() => setShowLeaveConfirm(false)} />
     </motion.div>
   )
 }

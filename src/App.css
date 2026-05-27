@@ -1167,6 +1167,29 @@
   box-shadow: 0 6px 18px rgba(255,159,67,0.45);
 }
 
+/* ========== Loading state ========== */
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  gap: 12px;
+  color: var(--text-light);
+  font-size: 0.95rem;
+}
+.loading-spinner {
+  width: 36px;
+  height: 36px;
+  border: 3.5px solid #eee;
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
 /* ========== Double-back toast ========== */
 .double-back-toast {
   position: fixed;

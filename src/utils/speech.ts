@@ -1,7 +1,7 @@
 import { TextToSpeech } from '@capacitor-community/text-to-speech'
 import { Capacitor } from '@capacitor/core'
 
-export async function speak(text, rate = 0.9) {
+export async function speak(text: string, rate = 0.9): Promise<void> {
   if (Capacitor.isNativePlatform()) {
     try {
       await TextToSpeech.speak({ text, lang: 'en-US', rate, pitch: 1.1, volume: 1 })
@@ -15,8 +15,8 @@ export async function speak(text, rate = 0.9) {
 
     let voices = window.speechSynthesis.getVoices()
     if (!voices.length) {
-      await new Promise(resolve => {
-        window.speechSynthesis.onvoiceschanged = resolve
+      await new Promise<void>(resolve => {
+        window.speechSynthesis.onvoiceschanged = () => resolve()
       })
       voices = window.speechSynthesis.getVoices()
     }
@@ -35,9 +35,9 @@ export async function speak(text, rate = 0.9) {
       utterance.voice = preferredVoice
     }
 
-    return new Promise((resolve) => {
-      utterance.onend = resolve
-      utterance.onerror = resolve
+    return new Promise(resolve => {
+      utterance.onend = () => resolve()
+      utterance.onerror = () => resolve()
       window.speechSynthesis.speak(utterance)
     })
   } catch {}

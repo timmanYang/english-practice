@@ -8,12 +8,13 @@ import SpeakerButton from './SpeakerButton'
 import ConfirmLeave from './ConfirmLeave'
 
 export default function Reading() {
-  const { grade } = useParams()
+  const { grade } = useParams<{ grade: string }>()
   const navigate = useNavigate()
   const [showLeaveConfirm, setShowLeaveConfirm] = useState(false)
-  const { list, loading } = useData(grade, 'readings')
+  const gradeNum = Number(grade)
+  const { list, loading } = useData(gradeNum, 'readings')
 
-  const queueRef = useRef([])
+  const queueRef = useRef<number[]>([])
 
   const pickNext = useCallback(() => {
     if (list.length === 0) return undefined
@@ -41,6 +42,7 @@ export default function Reading() {
       setCurrentIndex(indices[0])
     }
   }, [list.length])
+
   const [isSpeaking, setIsSpeaking] = useState(false)
   const hasAutoRead = useRef(false)
 
@@ -90,12 +92,9 @@ export default function Reading() {
       <span className="page-deco" style={{ bottom: '12%', left: '8%', fontSize: 22, animationDelay: '3s' }}>🌟</span>
       <div className="game-container">
         <div className="game-header">
-          <button className="back-btn" onClick={() => setShowLeaveConfirm(true)}>
-            ← 返回
-          </button>
+          <button className="back-btn" onClick={() => setShowLeaveConfirm(true)}>← 返回</button>
           <span className="progress-text">美文欣赏</span>
         </div>
-
         <AnimatePresence mode="wait">
           <motion.div
             className="game-card reading-card"
@@ -106,16 +105,12 @@ export default function Reading() {
             transition={{ duration: 0.25 }}
           >
             <span className="game-hint-label">📖 美文欣赏</span>
-
             <div className="reading-en-row">
               <span className="reading-en">{current.en}</span>
               <SpeakerButton text={current.en} size={28} />
             </div>
-
             <div className="reading-divider" />
-
             <span className="reading-zh">{current.zh}</span>
-
             <div className="reading-actions">
               <motion.button
                 className={`btn-read ${isSpeaking ? 'speaking' : ''}`}
@@ -136,12 +131,7 @@ export default function Reading() {
           </motion.div>
         </AnimatePresence>
       </div>
-
-      <ConfirmLeave
-        show={showLeaveConfirm}
-        onConfirm={() => navigate('/')}
-        onCancel={() => setShowLeaveConfirm(false)}
-      />
+      <ConfirmLeave show={showLeaveConfirm} onConfirm={() => navigate('/')} onCancel={() => setShowLeaveConfirm(false)} />
     </motion.div>
   )
 }

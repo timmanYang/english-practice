@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import words from '../data/words'
-import sentences from '../data/sentences'
+import { useData } from '../services/dataLoader'
 import { initAudio, playClick } from '../utils/sound'
 
 const gradeList = [
@@ -41,11 +40,13 @@ const item = {
 
 export default function Home() {
   const [selectedGrade, setSelectedGrade] = useState(3)
+  const { list: words } = useData(selectedGrade, 'words')
+  const { list: sentences } = useData(selectedGrade, 'sentences')
 
   useEffect(() => { initAudio() }, [])
 
-  const wordCount = words[selectedGrade]?.length || 0
-  const sentenceCount = sentences[selectedGrade]?.length || 0
+  const wordCount = words.length
+  const sentenceCount = sentences.length
 
   return (
     <motion.div

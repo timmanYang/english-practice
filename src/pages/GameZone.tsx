@@ -2,8 +2,8 @@ import { useParams, Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useData } from '../services/dataLoader'
 
-const gradeMap = { 3: '三年级', 4: '四年级', 5: '五年级', 6: '六年级' }
-const gradeIcons = { 3: '🐣', 4: '🐥', 5: '🦊', 6: '🦁' }
+const gradeMap: Record<string, string> = { 3: '三年级', 4: '四年级', 5: '五年级', 6: '六年级' }
+const gradeIcons: Record<string, string> = { 3: '🐣', 4: '🐥', 5: '🦊', 6: '🦁' }
 
 const games = [
   { id: 'flashcard', icon: '🃏', label: '单词闪卡', desc: '翻转卡片，记忆单词', color: 'm-flashcard' },
@@ -20,9 +20,10 @@ const sentenceGames = [
 ]
 
 export default function GameZone() {
-  const { grade } = useParams()
-  const { list: wordList } = useData(grade, 'words')
-  const { list: sentenceList } = useData(grade, 'sentences')
+  const { grade } = useParams<{ grade: string }>()
+  const gradeNum = Number(grade)
+  const { list: wordList } = useData(gradeNum, 'words')
+  const { list: sentenceList } = useData(gradeNum, 'sentences')
   const label = gradeMap[grade] || `Grade ${grade}`
 
   return (
@@ -38,7 +39,6 @@ export default function GameZone() {
       <span className="page-deco" style={{ top: '20%', right: '8%', fontSize: 22, animationDelay: '1.5s' }}>⭐</span>
       <span className="page-deco" style={{ bottom: '15%', left: '8%', fontSize: 26, animationDelay: '3s' }}>🌟</span>
       <span className="page-deco" style={{ bottom: '30%', right: '5%', fontSize: 20, animationDelay: '4.5s' }}>✨</span>
-
       <motion.span
         style={{ fontSize: 48, lineHeight: 1 }}
         initial={{ scale: 0 }}
@@ -47,7 +47,6 @@ export default function GameZone() {
       >
         {gradeIcons[grade] || '📚'}
       </motion.span>
-
       <motion.h1
         initial={{ y: 16, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
@@ -55,7 +54,6 @@ export default function GameZone() {
       >
         {label}
       </motion.h1>
-
       <motion.p
         className="word-count"
         initial={{ opacity: 0 }}
@@ -64,11 +62,7 @@ export default function GameZone() {
       >
         共 {wordList.length} 个单词 · {sentenceList.length} 个句式 · 选择游戏模式
       </motion.p>
-
-      <motion.div
-        className="game-mode-grid"
-        style={{ marginTop: 8 }}
-      >
+      <motion.div className="game-mode-grid" style={{ marginTop: 8 }}>
         {games.map((g, i) => (
           <motion.div
             key={g.id}
@@ -76,10 +70,7 @@ export default function GameZone() {
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.1 + i * 0.08, type: 'spring', stiffness: 300, damping: 24 }}
           >
-            <Link
-              to={`/play/${grade}/${g.id}`}
-              className={`game-mode-card ${g.color}`}
-            >
+            <Link to={`/play/${grade}/${g.id}`} className={`game-mode-card ${g.color}`}>
               <span className="mode-icon">{g.icon}</span>
               <span className="mode-label">{g.label}</span>
               <span className="mode-desc">{g.desc}</span>
@@ -87,7 +78,6 @@ export default function GameZone() {
           </motion.div>
         ))}
       </motion.div>
-
       <motion.h2
         className="section-title"
         initial={{ opacity: 0, y: 12 }}
@@ -97,11 +87,7 @@ export default function GameZone() {
       >
         📝 句式练习
       </motion.h2>
-
-      <motion.div
-        className="game-mode-grid"
-        style={{ marginTop: 0 }}
-      >
+      <motion.div className="game-mode-grid" style={{ marginTop: 0 }}>
         {sentenceGames.map((g, i) => (
           <motion.div
             key={g.id}
@@ -109,10 +95,7 @@ export default function GameZone() {
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.45 + i * 0.08, type: 'spring', stiffness: 300, damping: 24 }}
           >
-            <Link
-              to={`/play/${grade}/${g.id}`}
-              className={`game-mode-card ${g.color}`}
-            >
+            <Link to={`/play/${grade}/${g.id}`} className={`game-mode-card ${g.color}`}>
               <span className="mode-icon">{g.icon}</span>
               <span className="mode-label">{g.label}</span>
               <span className="mode-desc">{g.desc}</span>

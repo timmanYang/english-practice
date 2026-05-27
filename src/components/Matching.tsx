@@ -7,35 +7,37 @@ import { getGreatMsg, getGoodMsg, getFailureMsg } from '../utils/messages'
 import { pickItems } from '../utils/shuffle'
 import Confetti from './Confetti'
 import ConfirmLeave from './ConfirmLeave'
+import type { DataType, MatchCard } from '../types'
 
 const PAIR_COUNT = 6
 
 export default function Matching() {
-  const { grade } = useParams()
+  const { grade } = useParams<{ grade: string }>()
   const navigate = useNavigate()
   const location = useLocation()
   const [showLeaveConfirm, setShowLeaveConfirm] = useState(false)
-  const dataType = location.pathname.includes('sentence-') ? 'sentences' : 'words'
-  const { list, loading } = useData(grade, dataType)
+  const dataType: DataType = location.pathname.includes('sentence-') ? 'sentences' : 'words'
+  const gradeNum = Number(grade)
+  const { list, loading } = useData(gradeNum, dataType)
 
   const pairs = useMemo(() => {
     const selected = pickItems(list, PAIR_COUNT, `matching_${grade}_${dataType === 'sentences' ? 'sentence' : 'word'}`)
-    const cards = selected.flatMap((w, i) => [
+    const cards: MatchCard[] = selected.flatMap((w, i) => [
       { id: `en-${i}`, text: w.en, pairId: i, type: 'en' },
       { id: `zh-${i}`, text: w.zh, pairId: i, type: 'zh' },
     ])
     return cards.sort(() => Math.random() - 0.5)
   }, [list, grade, dataType])
 
-  const [selected, setSelected] = useState(null)
-  const [matched, setMatched] = useState(new Set())
-  const [wrong, setWrong] = useState(null)
+  const [selected, setSelected] = useState<MatchCard | null>(null)
+  const [matched, setMatched] = useState<Set<number>>(new Set())
+  const [wrong, setWrong] = useState<string[] | null>(null)
   const [finished, setFinished] = useState(false)
   const [attempts, setAttempts] = useState(0)
-  const [matchedAnim, setMatchedAnim] = useState(null)
+  const [matchedAnim, setMatchedAnim] = useState<number | null>(null)
   const congratsMsg = useRef(getGreatMsg())
 
-  const handleSelect = useCallback((card) => {
+  const handleSelect = useCallback((card: MatchCard) => {
     if (matched.has(card.pairId) || wrong) return
 
     if (!selected) {
@@ -113,29 +115,23 @@ export default function Matching() {
       <span className="page-deco" style={{ bottom: '10%', left: '8%', fontSize: 22, animationDelay: '3s' }}>🎯</span>
       <div className="game-container">
         <div className="game-header">
-          <button className="back-btn" onClick={() => setShowLeaveConfirm(true)}>
-            ← 返回
-          </button>
+          <button className="back-btn" onClick={() => setShowLeaveConfirm(true)}>← 返回</button>
           <span className="progress-text">{matched.size} / {PAIR_COUNT} 对</span>
         </div>
-
         <div className="progress-bar-wrap">
           <div className="progress-bar-fill" style={{ width: `${progress}%` }} />
         </div>
-
         <div className="game-card">
           <p style={{ fontWeight: 700, fontSize: '1rem', marginBottom: 4 }}>🔗 点击配对</p>
           <p style={{ fontSize: '0.8rem', color: 'var(--text-light)', marginBottom: 12 }}>
             {dataType === 'sentences' ? '将英文句式和中文翻译连起来' : '将英文单词和中文翻译连起来'}
           </p>
-
           <div className="matching-grid">
             {pairs.map((card) => {
               const isSelected = selected?.id === card.id
               const isMatched = matched.has(card.pairId)
               const isWrong = wrong?.includes(card.id)
               const isMatching = matchedAnim === card.pairId
-
               return (
                 <motion.div
                   key={card.id}
@@ -160,20 +156,13 @@ export default function Matching() {
             })}
           </div>
         </div>
-
         <p style={{ textAlign: 'center', fontSize: '0.85rem', color: 'var(--text-light)' }}>
           尝试次数: {attempts}
         </p>
       </div>
-
       <AnimatePresence>
         {finished && result && (
-          <motion.div
-            className="results-overlay"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
+          <motion.div className="results-overlay" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             {attempts <= PAIR_COUNT * 1.5 && <Confetti count={50} duration={3500} />}
             <motion.div
               className="results-card"
@@ -194,23 +183,14 @@ export default function Matching() {
               <div className="score">{PAIR_COUNT} / {PAIR_COUNT}</div>
               <p className="result-message">{result.msg}</p>
               <div className="results-actions">
-                <button className="btn-retry" onClick={() => window.location.reload()}>
-                  🔄 再来一次
-                </button>
-                <button className="btn-home" onClick={() => navigate('/')}>
-                  🏠 返回
-                </button>
+                <button className="btn-retry" onClick={() => window.location.reload()}>🔄 再来一次</button>
+                <button className="btn-home" onClick={() => navigate('/')}>🏠 返回</button>
               </div>
             </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
-
-      <ConfirmLeave
-        show={showLeaveConfirm}
-        onConfirm={() => navigate('/')}
-        onCancel={() => setShowLeaveConfirm(false)}
-      />
+      <ConfirmLeave show={showLeaveConfirm} onConfirm={() => navigate('/')} onCancel={() => setShowLeaveConfirm(false)} />
     </motion.div>
   )
 }

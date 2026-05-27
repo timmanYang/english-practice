@@ -6,16 +6,18 @@ import { playFlip, playClick } from '../utils/sound'
 import { pickItems } from '../utils/shuffle'
 import SpeakerButton from './SpeakerButton'
 import ConfirmLeave from './ConfirmLeave'
+import type { DataType } from '../types'
 
 export default function Flashcard() {
-  const { grade } = useParams()
+  const { grade } = useParams<{ grade: string }>()
   const navigate = useNavigate()
   const location = useLocation()
   const [showLeaveConfirm, setShowLeaveConfirm] = useState(false)
-  const dataType = location.pathname.includes('sentence-') ? 'sentences' : 'words'
-  const { list, loading } = useData(grade, dataType)
+  const dataType: DataType = location.pathname.includes('sentence-') ? 'sentences' : 'words'
+  const gradeNum = Number(grade)
+  const { list, loading } = useData(gradeNum, dataType)
 
-  const [localShuffled, setLocalShuffled] = useState([])
+  const [localShuffled, setLocalShuffled] = useState<{ en: string; zh: string }[]>([])
   const [index, setIndex] = useState(0)
 
   useEffect(() => {
@@ -24,6 +26,7 @@ export default function Flashcard() {
       setIndex(0)
     }
   }, [list, grade, dataType])
+
   const [showZh, setShowZh] = useState(false)
 
   const displayWord = localShuffled[index] || { en: '', zh: '' }
@@ -80,16 +83,12 @@ export default function Flashcard() {
       <span className="page-deco" style={{ bottom: '12%', left: '8%', fontSize: 22, animationDelay: '3s' }}>📖</span>
       <div className="game-container">
         <div className="game-header">
-          <button className="back-btn" onClick={() => setShowLeaveConfirm(true)}>
-            ← 返回
-          </button>
+          <button className="back-btn" onClick={() => setShowLeaveConfirm(true)}>← 返回</button>
           <span className="progress-text">{index + 1} / {localShuffled.length}</span>
         </div>
-
         <div className="progress-bar-wrap">
           <div className="progress-bar-fill" style={{ width: `${progress}%` }} />
         </div>
-
         <motion.div
           className="game-card flashcard-inner"
           key={index}
@@ -101,12 +100,7 @@ export default function Flashcard() {
           whileTap={{ scale: 0.97 }}
         >
           {!showZh ? (
-            <motion.div
-              className="flashcard-face"
-              key="en"
-              initial={{ rotateY: 0 }}
-              animate={{ rotateY: 0 }}
-            >
+            <motion.div className="flashcard-face" key="en" initial={{ rotateY: 0 }} animate={{ rotateY: 0 }}>
               <span className="hint">{dataType === 'sentences' ? '🇬🇧 英文句式' : '🇬🇧 英文'}</span>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                 <span className="big-word">{displayWord.en}</span>
@@ -116,8 +110,7 @@ export default function Flashcard() {
             </motion.div>
           ) : (
             <motion.div
-              className="flashcard-face"
-              key="zh"
+              className="flashcard-face" key="zh"
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ type: 'spring', stiffness: 200, damping: 15 }}
@@ -128,25 +121,13 @@ export default function Flashcard() {
             </motion.div>
           )}
         </motion.div>
-
         <div className="flash-nav">
-          <button className="btn-prev" onClick={prev} disabled={index === 0}>
-            ← 上一个
-          </button>
-          <button className="btn-shuffle" onClick={shuffle}>
-            🔀 随机
-          </button>
-          <button className="btn-next" onClick={next} disabled={index === localShuffled.length - 1}>
-            下一个 →
-          </button>
+          <button className="btn-prev" onClick={prev} disabled={index === 0}>← 上一个</button>
+          <button className="btn-shuffle" onClick={shuffle}>🔀 随机</button>
+          <button className="btn-next" onClick={next} disabled={index === localShuffled.length - 1}>下一个 →</button>
         </div>
       </div>
-
-      <ConfirmLeave
-        show={showLeaveConfirm}
-        onConfirm={() => navigate('/')}
-        onCancel={() => setShowLeaveConfirm(false)}
-      />
+      <ConfirmLeave show={showLeaveConfirm} onConfirm={() => navigate('/')} onCancel={() => setShowLeaveConfirm(false)} />
     </motion.div>
   )
 }
