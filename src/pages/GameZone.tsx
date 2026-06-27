@@ -16,14 +16,15 @@ const sentenceGames = [
   { id: 'sentence-flashcard', icon: '📖', label: '句式闪卡', desc: '翻转卡片，记忆句式', color: 'm-sentence-flashcard' },
   { id: 'sentence-matching', icon: '🔤', label: '句式配对', desc: '将英文句式和中文配成一对', color: 'm-sentence-matching' },
   { id: 'sentence-quiz', icon: '💬', label: '句式选择', desc: '四选一，选出正确的中文翻译', color: 'm-sentence-quiz' },
-  { id: 'reading', icon: '🌸', label: '美文欣赏', desc: '欣赏美文，自动朗读', color: 'm-reading' },
+  { id: 'reading', icon: '📋', label: '单元朗读', desc: '按单元浏览单词和句子', color: 'm-reading' },
 ]
 
 export default function GameZone() {
-  const { grade } = useParams<{ grade: string }>()
+  const { grade, semester } = useParams<{ grade: string; semester: string }>()
   const gradeNum = Number(grade)
-  const { list: wordList } = useData(gradeNum, 'words')
-  const { list: sentenceList } = useData(gradeNum, 'sentences')
+  const sem = (semester === 'lower' ? 'lower' : 'upper') as 'upper' | 'lower'
+  const { list: wordList } = useData(gradeNum, 'words', sem)
+  const { list: sentenceList } = useData(gradeNum, 'sentences', sem)
   const label = gradeMap[grade] || `Grade ${grade}`
 
   return (
@@ -55,6 +56,14 @@ export default function GameZone() {
         {label}
       </motion.h1>
       <motion.p
+        className="semester-badge"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.13 }}
+      >
+        {sem === 'upper' ? '上册' : '下册'}
+      </motion.p>
+      <motion.p
         className="word-count"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -70,7 +79,7 @@ export default function GameZone() {
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.1 + i * 0.08, type: 'spring', stiffness: 300, damping: 24 }}
           >
-            <Link to={`/play/${grade}/${g.id}`} className={`game-mode-card ${g.color}`}>
+            <Link to={`/play/${grade}/${sem}/${g.id}`} className={`game-mode-card ${g.color}`}>
               <span className="mode-icon">{g.icon}</span>
               <span className="mode-label">{g.label}</span>
               <span className="mode-desc">{g.desc}</span>
@@ -95,7 +104,7 @@ export default function GameZone() {
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.45 + i * 0.08, type: 'spring', stiffness: 300, damping: 24 }}
           >
-            <Link to={`/play/${grade}/${g.id}`} className={`game-mode-card ${g.color}`}>
+            <Link to={`/play/${grade}/${sem}/${g.id}`} className={`game-mode-card ${g.color}`}>
               <span className="mode-icon">{g.icon}</span>
               <span className="mode-label">{g.label}</span>
               <span className="mode-desc">{g.desc}</span>

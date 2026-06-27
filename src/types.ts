@@ -18,7 +18,26 @@ export interface DataState {
   error: string | null
 }
 
-export type DataType = 'words' | 'sentences' | 'readings'
+export type Semester = 'upper' | 'lower'
+
+export type DataType = 'words' | 'sentences' | 'readings' | 'units'
+
+export interface UnitEntry {
+  en: string
+  zh: string
+}
+
+export interface Unit {
+  label: string
+  title: string
+  items: UnitEntry[]
+}
+
+export interface UnitsResponse {
+  grade: number
+  totalUnits: number
+  units: Unit[]
+}
 
 export interface GameResult {
   emoji: string

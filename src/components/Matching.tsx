@@ -6,19 +6,18 @@ import { playWrong, playMatch, playComplete } from '../utils/sound'
 import { getGreatMsg, getGoodMsg, getFailureMsg } from '../utils/messages'
 import { pickItems } from '../utils/shuffle'
 import Confetti from './Confetti'
-import ConfirmLeave from './ConfirmLeave'
 import type { DataType, MatchCard } from '../types'
 
 const PAIR_COUNT = 6
 
 export default function Matching() {
-  const { grade } = useParams<{ grade: string }>()
+  const { grade, semester } = useParams<{ grade: string; semester: string }>()
   const navigate = useNavigate()
   const location = useLocation()
-  const [showLeaveConfirm, setShowLeaveConfirm] = useState(false)
   const dataType: DataType = location.pathname.includes('sentence-') ? 'sentences' : 'words'
   const gradeNum = Number(grade)
-  const { list, loading } = useData(gradeNum, dataType)
+  const sem = (semester === 'lower' ? 'lower' : 'upper') as 'upper' | 'lower'
+  const { list, loading } = useData(gradeNum, dataType, sem)
 
   const pairs = useMemo(() => {
     const selected = pickItems(list, PAIR_COUNT, `matching_${grade}_${dataType === 'sentences' ? 'sentence' : 'word'}`)
@@ -115,7 +114,7 @@ export default function Matching() {
       <span className="page-deco" style={{ bottom: '10%', left: '8%', fontSize: 22, animationDelay: '3s' }}>🎯</span>
       <div className="game-container">
         <div className="game-header">
-          <button className="back-btn" onClick={() => setShowLeaveConfirm(true)}>← 返回</button>
+          <button className="back-btn" onClick={() => navigate('/')}>← 返回</button>
           <span className="progress-text">{matched.size} / {PAIR_COUNT} 对</span>
         </div>
         <div className="progress-bar-wrap">
@@ -190,7 +189,6 @@ export default function Matching() {
           </motion.div>
         )}
       </AnimatePresence>
-      <ConfirmLeave show={showLeaveConfirm} onConfirm={() => navigate('/')} onCancel={() => setShowLeaveConfirm(false)} />
     </motion.div>
   )
 }

@@ -1,0 +1,133 @@
+<mxGraphModel>
+  <root>
+    <mxCell id="0"/>
+    <mxCell id="1" parent="0"/>
+    <!-- Entry -->
+    <mxCell id="2" value="main.tsx" style="rounded=1;fillColor=#E8F5E9;strokeColor=#388E3C;" vertex="1" parent="1">
+      <mxGeometry x="40" y="40" width="120" height="40" as="geometry"/>
+    </mxCell>
+    <mxCell id="3" value="HashRouter" style="rounded=1;fillColor=#E8F5E9;strokeColor=#388E3C;" vertex="1" parent="1">
+      <mxGeometry x="200" y="40" width="120" height="40" as="geometry"/>
+    </mxCell>
+    <mxCell id="4" value="App.tsx 布局+路由" style="rounded=1;fillColor=#C8E6C9;strokeColor=#2E7D32;" vertex="1" parent="1">
+      <mxGeometry x="360" y="40" width="140" height="40" as="geometry"/>
+    </mxCell>
+    <mxCell id="e1" value="" style="endArrow=classic;edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="2" target="3"/>
+    <mxCell id="e2" value="" style="endArrow=classic;edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="3" target="4"/>
+
+    <!-- Home page -->
+    <mxCell id="5" value="Home 首页" style="rounded=1;fillColor=#FFF3E0;strokeColor=#E65100;fontStyle=1;fontSize=14;" vertex="1" parent="1">
+      <mxGeometry x="40" y="140" width="120" height="40" as="geometry"/>
+    </mxCell>
+    <mxCell id="6" value="年级选择器 (Grade 3-6)" style="rounded=1;fillColor=#FFECB3;strokeColor=#F57F17;" vertex="1" parent="1">
+      <mxGeometry x="220" y="140" width="140" height="40" as="geometry"/>
+    </mxCell>
+    <mxCell id="7" value="学期切换 (上册/下册)" style="rounded=1;fillColor=#FFECB3;strokeColor=#F57F17;" vertex="1" parent="1">
+      <mxGeometry x="400" y="140" width="140" height="40" as="geometry"/>
+    </mxCell>
+    <mxCell id="8" value="游戏模式网格" style="rounded=1;fillColor=#FFECB3;strokeColor=#F57F17;" vertex="1" parent="1">
+      <mxGeometry x="580" y="140" width="120" height="40" as="geometry"/>
+    </mxCell>
+    <mxCell id="e3" value="" style="endArrow=classic;edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="5" target="6"/>
+    <mxCell id="e4" value="" style="endArrow=classic;edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="6" target="7"/>
+    <mxCell id="e5" value="" style="endArrow=classic;edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="7" target="8"/>
+
+    <!-- GameZone -->
+    <mxCell id="9" value="App.tsx 路由" style="rounded=1;fillColor=#E3F2FD;strokeColor=#1565C0;" vertex="1" parent="1">
+      <mxGeometry x="40" y="240" width="120" height="40" as="geometry"/>
+    </mxCell>
+    <mxCell id="10" value="/play/:grade/:semester" style="rounded=1;fillColor=#BBDEFB;strokeColor=#1565C0;fontStyle=1;" vertex="1" parent="1">
+      <mxGeometry x="220" y="240" width="160" height="40" as="geometry"/>
+    </mxCell>
+    <mxCell id="e6" value="" style="endArrow=classic;edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="9" target="10"/>
+
+    <!-- Game Components -->
+    <mxCell id="11" value="Flashcard 单词闪卡" style="rounded=1;fillColor=#F3E5F5;strokeColor=#7B1FA2;" vertex="1" parent="1">
+      <mxGeometry x="40" y="340" width="140" height="40" as="geometry"/>
+    </mxCell>
+    <mxCell id="12" value="Matching 单词配对" style="rounded=1;fillColor=#F3E5F5;strokeColor=#7B1FA2;" vertex="1" parent="1">
+      <mxGeometry x="210" y="340" width="140" height="40" as="geometry"/>
+    </mxCell>
+    <mxCell id="13" value="Quiz 选择挑战" style="rounded=1;fillColor=#F3E5F5;strokeColor=#7B1FA2;" vertex="1" parent="1">
+      <mxGeometry x="380" y="340" width="140" height="40" as="geometry"/>
+    </mxCell>
+    <mxCell id="14" value="Spelling 拼写" style="rounded=1;fillColor=#F3E5F5;strokeColor=#7B1FA2;" vertex="1" parent="1">
+      <mxGeometry x="550" y="340" width="140" height="40" as="geometry"/>
+    </mxCell>
+    <mxCell id="15" value="UnitList 单元朗读" style="rounded=1;fillColor=#FCE4EC;strokeColor=#C62828;" vertex="1" parent="1">
+      <mxGeometry x="380" y="420" width="140" height="40" as="geometry"/>
+    </mxCell>
+
+    <!-- Connections from GameZone to components -->
+    <mxCell id="e7" value="" style="endArrow=classic;edgeStyle=orthogonalEdgeStyle;exitX=0.1;exitY=1;entryX=0.1;entryY=0;source=10;target=11;exitY=1;exitX=0.1;entryY=0;entryX=0.1;" edge="1" parent="1">
+    </mxCell>
+    <mxCell id="e8" value="" style="endArrow=classic;edgeStyle=orthogonalEdgeStyle;exitX=0.35;exitY=1;entryX=0.35;entryY=0;source=10;target=12;" edge="1" parent="1"/>
+    <mxCell id="e9" value="" style="endArrow=classic;edgeStyle=orthogonalEdgeStyle;exitX=0.6;exitY=1;entryX=0.6;entryY=0;source=10;target=13;" edge="1" parent="1"/>
+    <mxCell id="e10" value="" style="endArrow=classic;edgeStyle=orthogonalEdgeStyle;exitX=0.85;exitY=1;entryX=0.85;entryY=0;source=10;target=14;" edge="1" parent="1"/>
+    <mxCell id="e11" value="" style="endArrow=classic;edgeStyle=orthogonalEdgeStyle;exitX=0.6;exitY=1;entryX=0.3;entryY=0;source=13;target=15;" edge="1" parent="1"/>
+
+    <!-- Exit flow -->
+    <mxCell id="16" value="返回按钮 / 硬件返回" style="rounded=1;fillColor=#FFEBEE;strokeColor=#D32F2F;" vertex="1" parent="1">
+      <mxGeometry x="40" y="440" width="140" height="40" as="geometry"/>
+    </mxCell>
+    <mxCell id="17" value="ConfirmLeave 对话框" style="rounded=1;fillColor=#FFCDD2;strokeColor=#C62828;" vertex="1" parent="1">
+      <mxGeometry x="220" y="440" width="140" height="40" as="geometry"/>
+    </mxCell>
+    <mxCell id="18" value="CapApp.exitApp()" style="rounded=1;fillColor=#F44336;strokeColor=#B71C1C;fontColor=#FFFFFF;" vertex="1" parent="1">
+      <mxGeometry x="400" y="440" width="140" height="40" as="geometry"/>
+    </mxCell>
+    <mxCell id="e12" value="" style="endArrow=classic;edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="16" target="17"/>
+    <mxCell id="e13" value="" style="endArrow=classic;edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="17" target="18"/>
+
+    <!-- Data flow (right side) -->
+    <mxCell id="19" value="数据层" style="rounded=1;fillColor=#E8EAF6;strokeColor=#283593;fontStyle=1;fontSize=14;" vertex="1" parent="1">
+      <mxGeometry x="750" y="40" width="120" height="40" as="geometry"/>
+    </mxCell>
+    <mxCell id="20" value="Spring Boot API :8082" style="rounded=1;fillColor=#C5CAE9;strokeColor=#3949AB;" vertex="1" parent="1">
+      <mxGeometry x="750" y="120" width="120" height="40" as="geometry"/>
+    </mxCell>
+    <mxCell id="21" value="src/services/api.ts" style="rounded=1;fillColor=#C5CAE9;strokeColor=#3949AB;" vertex="1" parent="1">
+      <mxGeometry x="750" y="200" width="120" height="40" as="geometry"/>
+    </mxCell>
+    <mxCell id="22" value="src/services/dataLoader.ts useData / useUnits" style="rounded=1;fillColor=#C5CAE9;strokeColor=#3949AB;" vertex="1" parent="1">
+      <mxGeometry x="750" y="280" width="140" height="40" as="geometry"/>
+    </mxCell>
+    <mxCell id="23" value="localStorage 缓存" style="rounded=1;fillColor=#C5CAE9;strokeColor=#3949AB;" vertex="1" parent="1">
+      <mxGeometry x="750" y="360" width="120" height="40" as="geometry"/>
+    </mxCell>
+    <mxCell id="ed1" value="" style="endArrow=classic;edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="19" target="20"/>
+    <mxCell id="ed2" value="" style="endArrow=classic;edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="20" target="21"/>
+    <mxCell id="ed3" value="" style="endArrow=classic;edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="21" target="22"/>
+    <mxCell id="ed4" value="" style="endArrow=classic;edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="22" target="23"/>
+
+    <!-- Component dependencies -->
+    <mxCell id="24" value="utils/shuffle.ts pickItems" style="rounded=1;fillColor=#FFF8E1;strokeColor=#F9A825;" vertex="1" parent="1">
+      <mxGeometry x="750" y="440" width="140" height="40" as="geometry"/>
+    </mxCell>
+    <mxCell id="25" value="utils/speech.ts TTS" style="rounded=1;fillColor=#FFF8E1;strokeColor=#F9A825;" vertex="1" parent="1">
+      <mxGeometry x="750" y="520" width="120" height="40" as="geometry"/>
+    </mxCell>
+    <mxCell id="26" value="utils/sound.ts 音效" style="rounded=1;fillColor=#FFF8E1;strokeColor=#F9A825;" vertex="1" parent="1">
+      <mxGeometry x="750" y="600" width="120" height="40" as="geometry"/>
+    </mxCell>
+
+    <!-- Data flow arrows from right to components -->
+    <mxCell id="ed5" value="" style="endArrow=classic;dashed=1;edgeStyle=orthogonalEdgeStyle;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="22" target="5"/>
+    <mxCell id="ed6" value="" style="endArrow=classic;dashed=1;edgeStyle=orthogonalEdgeStyle;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="22" target="11"/>
+    <mxCell id="ed7" value="" style="endArrow=classic;dashed=1;edgeStyle=orthogonalEdgeStyle;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="22" target="12"/>
+    <mxCell id="ed8" value="" style="endArrow=classic;dashed=1;edgeStyle=orthogonalEdgeStyle;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="22" target="13"/>
+    <mxCell id="ed9" value="" style="endArrow=classic;dashed=1;edgeStyle=orthogonalEdgeStyle;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="22" target="14"/>
+    <mxCell id="ed10" value="" style="endArrow=classic;dashed=1;edgeStyle=orthogonalEdgeStyle;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="22" target="15"/>
+
+    <!-- Home to App routing arrow -->
+    <mxCell id="e14" value="" style="endArrow=classic;edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="8" target="9"/>
+
+    <!-- Labels -->
+    <mxCell id="27" value="页面流程" style="text;html=1;fontStyle=1;fontSize=14;align=center;verticalAlign=middle;" vertex="1" parent="1">
+      <mxGeometry x="40" y="10" width="120" height="24" as="geometry"/>
+    </mxCell>
+    <mxCell id="28" value="数据/工具层" style="text;html=1;fontStyle=1;fontSize=14;align=center;verticalAlign=middle;" vertex="1" parent="1">
+      <mxGeometry x="750" y="10" width="120" height="24" as="geometry"/>
+    </mxCell>
+  </root>
+</mxGraphModel>

@@ -7,16 +7,15 @@ import { getResultMsg } from '../utils/messages'
 import { pickItems } from '../utils/shuffle'
 import Confetti from './Confetti'
 import SpeakerButton from './SpeakerButton'
-import ConfirmLeave from './ConfirmLeave'
 
 const SPELLING_COUNT = 10
 
 export default function Spelling() {
-  const { grade } = useParams<{ grade: string }>()
+  const { grade, semester } = useParams<{ grade: string; semester: string }>()
   const navigate = useNavigate()
-  const [showLeaveConfirm, setShowLeaveConfirm] = useState(false)
   const gradeNum = Number(grade)
-  const { list, loading } = useData(gradeNum, 'words')
+  const sem = (semester === 'lower' ? 'lower' : 'upper') as 'upper' | 'lower'
+  const { list, loading } = useData(gradeNum, 'words', sem)
 
   const questionList = useMemo(() => {
     return pickItems(list, SPELLING_COUNT, `spelling_${grade}_word`)
@@ -105,7 +104,7 @@ export default function Spelling() {
       <span className="page-deco" style={{ bottom: '10%', left: '8%', fontSize: 22, animationDelay: '3s' }}>🔤</span>
       <div className="game-container">
         <div className="game-header">
-          <button className="back-btn" onClick={() => setShowLeaveConfirm(true)}>← 返回</button>
+          <button className="back-btn" onClick={() => navigate('/')}>← 返回</button>
           <span className="progress-text">{qIndex + 1} / {questionList.length}</span>
         </div>
         <div className="progress-bar-wrap">
@@ -225,7 +224,6 @@ export default function Spelling() {
           </motion.div>
         )}
       </AnimatePresence>
-      <ConfirmLeave show={showLeaveConfirm} onConfirm={() => navigate('/')} onCancel={() => setShowLeaveConfirm(false)} />
     </motion.div>
   )
 }

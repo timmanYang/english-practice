@@ -7,19 +7,18 @@ import { getResultMsg } from '../utils/messages'
 import { pickItems } from '../utils/shuffle'
 import Confetti from './Confetti'
 import SpeakerButton from './SpeakerButton'
-import ConfirmLeave from './ConfirmLeave'
 import type { DataType, Question } from '../types'
 
 const QUIZ_COUNT = 10
 
 export default function Quiz() {
-  const { grade } = useParams<{ grade: string }>()
+  const { grade, semester } = useParams<{ grade: string; semester: string }>()
   const navigate = useNavigate()
   const location = useLocation()
-  const [showLeaveConfirm, setShowLeaveConfirm] = useState(false)
   const dataType: DataType = location.pathname.includes('sentence-') ? 'sentences' : 'words'
   const gradeNum = Number(grade)
-  const { list, loading } = useData(gradeNum, dataType)
+  const sem = (semester === 'lower' ? 'lower' : 'upper') as 'upper' | 'lower'
+  const { list, loading } = useData(gradeNum, dataType, sem)
 
   const questions = useMemo(() => {
     const selected = pickItems(list, QUIZ_COUNT, `quiz_${grade}_${dataType === 'sentences' ? 'sentence' : 'word'}`)
@@ -97,7 +96,7 @@ export default function Quiz() {
       <span className="page-deco" style={{ bottom: '12%', left: '8%', fontSize: 22, animationDelay: '3s' }}>💡</span>
       <div className="game-container">
         <div className="game-header">
-          <button className="back-btn" onClick={() => setShowLeaveConfirm(true)}>← 返回</button>
+          <button className="back-btn" onClick={() => navigate('/')}>← 返回</button>
           <span className="progress-text">{qIndex + 1} / {questions.length}</span>
         </div>
         <div className="progress-bar-wrap">
@@ -175,7 +174,6 @@ export default function Quiz() {
           </motion.div>
         )}
       </AnimatePresence>
-      <ConfirmLeave show={showLeaveConfirm} onConfirm={() => navigate('/')} onCancel={() => setShowLeaveConfirm(false)} />
     </motion.div>
   )
 }

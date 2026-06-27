@@ -32,5 +32,6 @@ snapshot-home.md
 .playwright-mcp/
 android/**/build*/
 
-# Environment
-.env
+# Environment (local overrides only)
+.env.local
+.env.*.local

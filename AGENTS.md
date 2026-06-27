@@ -8,8 +8,8 @@ English vocabulary/sentence practice game for Guangzhou elementary grades 3–6.
 ## Commands
 
 ```
-npm run dev       # Vite dev server (proxies /api → localhost:8080)
-npm run build     # Build to dist/
+npm run dev       # Vite dev server (proxies /api → localhost:8082)
+npm run build     # Build to dist/ (uses .env.production for API URL)
 npm run lint      # ESLint flat config (no typecheck, no Prettier)
 npm run preview   # Vite preview server
 ```
@@ -81,4 +81,19 @@ Capacitor `backButton` listener (Android), `popstate` fallback (browser):
 - **StrictMode** on in `main.tsx` — effects fire twice in dev
 - **Capacitor `addListener` returns a Promise** — cannot use `useEffect` directly. Use a stored handle ref and call `.remove()` on cleanup. `CapApp.removeAllListeners()` is safe if only one listener.
 - **`no-undef` is `warn`** in ESLint — `OscillatorType` and other DOM types won't error
-- **API requirement** — dev server expects a backend at `localhost:8080` proxying `/api/*`
+- **API requirement** — dev server expects a backend at `localhost:8082` proxying `/api/*`
+
+## Environment Variables
+
+Vite loads env files in order (later overrides earlier):
+
+| File | Committed | Loaded | Purpose |
+|---|---|---|---|
+| `.env` | ✅ | all modes | Default (empty → uses Vite proxy) |
+| `.env.production` | ✅ | `vite build` | Remote API URL for APK |
+| `.env.local` | ❌ | all modes | Local overrides |
+| `.env.*.local` | ❌ | matching mode | Debug overrides |
+
+- `npm run dev` → `.env` (empty) → requests go through Vite proxy to `localhost:8082`
+- `npm run build` → `.env` + `.env.production` → `VITE_API_URL` set to production
+- `.env.local` can override for local testing against remote: `VITE_API_URL=http://121.199.162.179:8082`

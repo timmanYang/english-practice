@@ -22,7 +22,7 @@ const sentenceGames = [
   { id: 'sentence-flashcard', icon: '📖', label: '句式闪卡', desc: '翻转卡片，记忆句式', color: 'm-sentence-flashcard' },
   { id: 'sentence-matching', icon: '🔤', label: '句式配对', desc: '将英文句式和中文配成一对', color: 'm-sentence-matching' },
   { id: 'sentence-quiz', icon: '💬', label: '句式选择', desc: '四选一，选出正确的中文翻译', color: 'm-sentence-quiz' },
-  { id: 'reading', icon: '🌸', label: '美文欣赏', desc: '欣赏美文，自动朗读', color: 'm-reading' },
+  { id: 'reading', icon: '📋', label: '单元朗读', desc: '按单元浏览单词和句子', color: 'm-reading' },
 ]
 
 const container = {
@@ -38,10 +38,15 @@ const item = {
   show: { y: 0, opacity: 1, transition: { type: 'spring', stiffness: 300, damping: 22 } },
 }
 
+function loadSemester(): 'upper' | 'lower' {
+  try { const v = localStorage.getItem('semester'); return v === 'lower' ? 'lower' : 'upper' } catch { return 'upper' }
+}
+
 export default function Home() {
   const [selectedGrade, setSelectedGrade] = useState(3)
-  const { list: words } = useData(selectedGrade, 'words')
-  const { list: sentences } = useData(selectedGrade, 'sentences')
+  const [semester, setSemester] = useState<'upper' | 'lower'>(loadSemester)
+  const { list: words } = useData(selectedGrade, 'words', semester)
+  const { list: sentences } = useData(selectedGrade, 'sentences', semester)
 
   useEffect(() => { initAudio() }, [])
 
@@ -79,13 +84,22 @@ export default function Home() {
           </motion.button>
         ))}
       </motion.div>
+      <motion.div
+        className="semester-toggle"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.12 }}
+      >
+        <button className={`semester-btn${semester === 'upper' ? ' active' : ''}`} onClick={() => { setSemester('upper'); localStorage.setItem('semester', 'upper') }}>上册</button>
+        <button className={`semester-btn${semester === 'lower' ? ' active' : ''}`} onClick={() => { setSemester('lower'); localStorage.setItem('semester', 'lower') }}>下册</button>
+      </motion.div>
       <motion.p
         className="word-count-hint"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.15 }}
       >
-        {gradeList.find(g => g.num === selectedGrade)?.icon} {gradeList.find(g => g.num === selectedGrade)?.label} · {wordCount} 个单词 · {sentenceCount} 个句式
+        {gradeList.find(g => g.num === selectedGrade)?.icon} {gradeList.find(g => g.num === selectedGrade)?.label} {semester === 'upper' ? '上册' : '下册'} · {wordCount} 个单词 · {sentenceCount} 个句式
       </motion.p>
       <motion.div
         className="game-mode-grid"
@@ -97,7 +111,7 @@ export default function Home() {
         {games.map((g) => (
           <motion.div key={g.id} variants={item}>
             <Link
-              to={`/play/${selectedGrade}/${g.id}`}
+              to={`/play/${selectedGrade}/${semester}/${g.id}`}
               className={`game-mode-card ${g.color}`}
               onClick={() => playClick()}
             >
@@ -126,7 +140,7 @@ export default function Home() {
         {sentenceGames.map((g) => (
           <motion.div key={g.id} variants={item}>
             <Link
-              to={`/play/${selectedGrade}/${g.id}`}
+              to={`/play/${selectedGrade}/${semester}/${g.id}`}
               className={`game-mode-card ${g.color}`}
               onClick={() => playClick()}
             >

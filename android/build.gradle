@@ -5,6 +5,8 @@ rootProject.buildDir = file("${rootDir}/build3")
 buildscript {
     
     repositories {
+        maven { url 'https://maven.aliyun.com/repository/public' }
+        maven { url 'https://maven.aliyun.com/repository/google' }
         google()
         mavenCentral()
     }
@@ -21,6 +23,8 @@ apply from: "variables.gradle"
 
 allprojects {
     repositories {
+        maven { url 'https://maven.aliyun.com/repository/public' }
+        maven { url 'https://maven.aliyun.com/repository/google' }
         google()
         mavenCentral()
     }
